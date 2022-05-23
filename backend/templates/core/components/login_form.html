@@ -1,0 +1,19 @@
+{% load django_bootstrap5 %}
+
+<div class="card">
+    <div class="card-header">
+        <h1>Log In</h1>
+    </div>
+    <div class="card-body">
+        <form method="post" novalidate class="form m-2"
+                hx-post="{% url 'login_form_component' %}"
+                hx-target=".card"
+                hx-swap="outerHTML"
+            >{% csrf_token %}
+
+            {% bootstrap_form form %}
+
+            {% bootstrap_button button_type="submit" content="Log In" %}
+        </form>
+    </div>
+</div>

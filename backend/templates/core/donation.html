@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include 'core/_topnav.html' %}
+
+<div class="container">
+    <div class="mt-4 mx-auto">
+        <div class="card">
+            <div class="card-body">
+
+                <p>We bring this vision to life through creating resources, art, culture, and 1-on-1 mentoring and sessions.</p>
+
+                <p>We are primarily supported by donations. We welcome all of those who wish to realize their own true self, and invite those who recognize the pricelessness of what we offer to give.</p>
+
+                <p><strong>We are grateful for all of our 13,087 donators.</strong></p>
+
+                <p><strong>871 of the people who support this project chose to make their names public.</strong></p>
+
+                <p><a href="">See the people who support us and their messages.</a></p>
+
+                <h2>Donate</h2>
+
+                <p>We invite you to give with a heart of generosity according to your means and what feels right for you.</p>
+
+                <p><a class="btn btn-primary">Click here for donation options</a></p>
+
+                <p>All of our donations go towards helping others.</p>
+
+                <p>By supporting Crystallization Culture, you are also supporting 5 other donation based projects that we are creating to benefit all beings.</p>
+
+                <hr>
+
+                <h1>Crystallization Culture</h1>
+
+                <h2>Your frequency, crystallized</h2>
+
+                <p>Thank you for your generous support.</p>
+                <p>Your donation goes to supporting our efforts to help independent mystics and spiritual practicioners.</p>
+
+                <hr/>
+
+                <fieldset>
+
+                    <legend>Would you like to give one-time or recurring monthly?</legend>
+
+                    <div class="row">
+                        <div class="col">
+                            <input type="radio" class="btn-check" name="options-outlined" id="success-outlined">
+                            <label class="btn btn-outline-success w-100" for="success-outlined">
+                                One-time donation
+                            </label>
+                            <small>A one-time donation helps us now.</small>
+                        </div>
+                        <div class="col">
+                            <input type="radio" class="btn-check" name="options-outlined" id="danger-outlined">
+                            <label class="btn btn-outline-secondary w-100" for="danger-outlined">
+                                Give recurring
+                            </label>
+                            <small>A monthly donation helps us plan for the future.</small>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <hr/>
+
+                <fieldset>
+                    <legend>How much would you like to give?</legend>
+
+                    <div class="row" x-data="{amounts: [
+                        '$4.44',
+                        '$44.44',
+                        '$444.44',
+                        '$4444.44',
+                        ]}">
+                        <template x-for="(amount, index) in amounts" :key="index">
+                            <div class="col">
+                                <input type="radio" class="btn-check" name="amount" :id="'amount' + index">
+                                <label class="btn btn-outline-secondary w-100" :for="'amount' + index">
+                                    Give <span x-text="amount"></span>
+                                </label>
+                            </div>
+                        </template>
+                    </div>
+                </fieldset>
+
+                <hr/>
+
+                <fieldset>
+                    <legend>Would you like to give publicly?</legend>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                        <label class="form-check-label" for="defaultCheck1">
+                            Add your name to the public page where we thank all of our donors
+                        </label>
+                    </div>
+                </fieldset>
+
+                <hr/>
+
+                <fieldset>
+                    <legend>Name to display for the donation</legend>
+
+                    <div class="row mb-3">
+                        <div class="col">
+                            <label class="d-block">First name</label>
+                            <input type="text" class="form-control w-100">
+                        </div>
+                        <div class="col">
+                            <label class="d-block">Last name</label>
+                            <input type="text" class="form-control w-100">
+                        </div>
+                    </div>
+
+                    <legend>Custom message</legend>
+
+                    <textarea class="form-control" rows="3" placeholder="If you would like to write a public message to show with your donation, write it here. Otherwise we will just show your name."></textarea>
+                </fieldset>
+
+                <hr/>
+
+                <fieldset>
+                    <legend>Do you want to hear from us about retreats, events, and more?</legend>
+
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" value="" id="defaultCheck1">
+                        <label class="form-check-label" for="defaultCheck1">
+                            Subscribe to our mailing list where we send you things we think are your highest and best to receive
+                        </label>
+
+                    </div>
+
+                    <label class="d-block">Email</label>
+                    <input type="email" class="form-control w-100">
+                </fieldset>
+
+                <hr>
+
+                <a class="btn btn-dark btn-lg mt-4">Donate securely with Stripe</a>
+
+                <a>Donate with PayPal</a>
+                <p>Send Crypto to our wallet</p>
+
+                Eth:
+                0x8AdCd237c98453cc9d5C975156d09580f28e05A2
+            </div>
+        </div>
+    </div>
+</div>
+    <!--
+When a user goes to the donation page, we might store
+a stripe customer id
+a stripe payment method id
+
+If they saved their payment method, 
+    -->
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+var stripe = Stripe('{{ STRIPE_PUBLISHABLE_KEY }}');
+var button = document.getElementById('donate-button');
+var amount = document.getElementById('amount-input');
+var causes = document.getElementById('causes');
+button.addEventListener('click', function(e) {
+    e.preventDefault();
+    fetch('/create-session', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            amount: amount.value,
+            cause: causes.value,
+        }),
+    })
+        .then((response) => response.json())
+        .then((session) => {
+            stripe.redirectToCheckout({
+                sessionId: session.id
+            });
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+});
+</script>
+{% endblock %}
