@@ -2,6 +2,10 @@
 import os
 import sys
 
+print("You can put really important messages here, however you want, the cards aren't a precise system, and are a swarm creature")
+
+print("everything is a creature")
+
 
 def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.config.settings')

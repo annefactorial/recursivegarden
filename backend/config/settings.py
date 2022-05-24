@@ -107,7 +107,6 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
-USE_L10N = True
 USE_TZ = True
 
 STATICFILES_DIRS = [
@@ -137,7 +136,7 @@ ADMIN_URL = env('ADMIN_URL', default='admin').strip('/')
 
 AUTH_USER_MODEL = 'core.User'
 LOGOUT_REDIRECT_URL = reverse_lazy('login')
-LOGIN_REDIRECT_URL = reverse_lazy('room')
+LOGIN_REDIRECT_URL = reverse_lazy('donation_page')
 
 # Stripe
 

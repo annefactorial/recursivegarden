@@ -1,3 +1,5 @@
-from django.test import TestCase
+def test_math():
+    assert 2 == 2
 
-# Create your tests here.
+
+def 

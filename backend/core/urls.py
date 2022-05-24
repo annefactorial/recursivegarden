@@ -24,6 +24,5 @@ urlpatterns = [
 
     path("donation/", views.DonationPageView.as_view(), name="donation_page"),
 
-    path("c/<path:path>/", views.RoomView.as_view(), name="room"),
-
+    path("<path:path>/", views.RoomView.as_view(), name="room_view"),
 ]

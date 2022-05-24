@@ -53,7 +53,12 @@ class CardAutocompleteComponent(generic.ListView):
 
 
 class RoomView(generic.TemplateView):
-    pass
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_template_names(self):
+        self.kwargs.path
+        pass
 
 
 class PrivateRoomView(
