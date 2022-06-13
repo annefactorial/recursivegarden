@@ -11,4 +11,8 @@ Everything starts out here until it becomes specific enough to warrant another a
 
 class CoreConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'backend.core'
+    name = 'core'
+
+    def ready(self):
+        from rich.traceback import install
+        install()

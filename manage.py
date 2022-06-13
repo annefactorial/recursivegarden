@@ -2,13 +2,26 @@
 import os
 import sys
 
-print("You can put really important messages here, however you want, the cards aren't a precise system, and are a swarm creature")
 
-print("everything is a creature")
+
+
+print('''
+a mantra for the software to say before it does anything, and also anyone who works on the system
+server mantra: 'we are weaving golden webs'
+server name: dreamweaver
+'''
+)
+
+print("the build cries out, please, don't break me!")
+
+print("what if we made the code self-writing, by making the system facilitate the writing of tests and stuff")
+
+print("what if you can't really run the local devserver at all?")
+print("what if this codebase guides you into running the tests frequently")
 
 
 def main():
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.config.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

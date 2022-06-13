@@ -3,15 +3,13 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 import environ
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env()
 environ.Env.read_env(str(BASE_DIR / '.env'))
 
 DEBUG = env.bool('DEBUG', default=False)
 SECRET_KEY = env('SECRET_KEY')
-
-ALLOWED_HOSTS = []
 
 DJANGO_APPS = [
     'django.contrib.admin',
@@ -20,13 +18,18 @@ DJANGO_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sitemaps',
 ]
 
 THIRD_PARTY_APPS = [
-    'django_bootstrap5',
+    'rest_framework',
+    'widget_tweaks',
     "django_htmx",
     "django_browser_reload",
-    "django_watchfiles",
+    "tailwind",
+    "theme",
+    #"django_watchfiles",
+
 ]
 
 DEBUG_APPS = [
@@ -35,7 +38,7 @@ DEBUG_APPS = [
 ]
 
 CUSTOM_APPS = [
-    'backend.core',
+    'core',
 ]
 
 if DEBUG:
@@ -47,6 +50,7 @@ MIDDLEWARE = []
 
 if DEBUG:
     MIDDLEWARE += [
+        "django_browser_reload.middleware.BrowserReloadMiddleware",
         "debug_toolbar.middleware.DebugToolbarMiddleware",
     ]
 
@@ -69,12 +73,14 @@ MESSAGE_TAGS = {
     messages.ERROR: 'error',
 }
 
-ROOT_URLCONF = 'backend.config.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [str(BASE_DIR / 'backend/templates')],
+        'DIRS': [
+            BASE_DIR / 'templates',
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -87,15 +93,40 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'backend.config.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-        'ATOMIC_REQUESTS': True,
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+            'ATOMIC_REQUESTS': True,
+        }
     }
-}
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+            "LOCATION": BASE_DIR / '.cache'
+        }
+    }
+
+    DATABASES = {
+        "default": {
+            "ENGINE": 'django.db.backends.postgresql_psycopg2',
+            "NAME": 'recursivegarden',
+            "USER": 'recursivegarden',
+            "PASSWORD": env('DB_PASSWORD'),
+            "HOST": 'localhost',
+            "PORT": "",
+            'TEST': {
+                'NAME': 'test_recursivegarden',
+                'USER': 'recursivegarden',
+                'PASSWORD': '',
+            },
+            'ATOMIC_REQUESTS': True,
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     { 'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator' },
@@ -112,10 +143,22 @@ USE_TZ = True
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATIC_URL = '/static/'
-#STATIC_ROOT = str(BASE_DIR / 'staticfiles')
+
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+]
+
+# ManifestStaticFilesStorage is recommended in production, to prevent outdated
+# Javascript / CSS assets being served from cache (e.g. after a Wagtail upgrade).
+# See https://docs.djangoproject.com/en/2.2/ref/contrib/staticfiles/#manifeststaticfilesstorage
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+
 MEDIA_URL = '/media/'
-MEDIA_ROOT = str(BASE_DIR / 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -129,16 +172,28 @@ if DEBUG:
     ]
 else:
     ALLOWED_HOSTS = [
-        "recursivegarden.com",
+        'localhost',
+        'recursivegarden.com',
     ]
 
-ADMIN_URL = env('ADMIN_URL', default='admin').strip('/')
+DJANGO_ADMIN_URL = env('DJANGO_ADMIN_URL', default='admin').strip('/')
 
-AUTH_USER_MODEL = 'core.User'
-LOGOUT_REDIRECT_URL = reverse_lazy('login')
-LOGIN_REDIRECT_URL = reverse_lazy('donation_page')
+if DEBUG:
+    BASE_URL = 'http://localhost:8000'
+else:
+    BASE_URL = 'https://recursivegarden.com'
 
-# Stripe
 
-STRIPE_PUBLISHABLE_KEY = env('STRIPE_PUBLISHABLE_KEY')
-STRIPE_SECRET_KEY = env('STRIPE_SECRET_KEY')
+# Email
+if DEBUG:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAdminUser',
+    ]
+}
+
+TAILWIND_APP_NAME = 'theme'
