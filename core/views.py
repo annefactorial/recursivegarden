@@ -1,4 +1,5 @@
 from django.views import generic
+from django.conf import settings
 from django.urls import reverse
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.template.response import TemplateResponse
