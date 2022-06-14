@@ -169,7 +169,14 @@ INTERNAL_IPS = [
 
 DJANGO_ADMIN_URL = env('DJANGO_ADMIN_URL', default='admin').strip('/')
 
+
+
 # Email
+ADMINS = [
+    ('David Factorial', 'david@recursivegarden.com'),
+]
+SERVER_EMAIL = 'david@recursivegarden.com'
+
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 else:
