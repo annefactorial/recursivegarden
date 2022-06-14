@@ -205,4 +205,4 @@ ALLOWED_HOSTS = [
     'labyrinth.love',
     'hanjononduality.com',
 ]
-ROOT_HOST = env('ROOT_HOST', 'localhost')
+ROOT_HOST = env('ROOT_HOST', default='localhost')
