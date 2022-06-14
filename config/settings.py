@@ -200,6 +200,7 @@ TAILWIND_APP_NAME = 'theme'
 ALLOWED_HOSTS = [
     "localhost",
     'recursivegarden.com',
+    '.recursivegarden.com',
     'socialmemorycomplex.io',
     'labyrinth.love',
     'hanjononduality.com',
