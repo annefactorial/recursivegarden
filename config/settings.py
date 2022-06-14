@@ -1,6 +1,5 @@
 from pathlib import Path
 from django.contrib import messages
-from django.urls import reverse_lazy
 import environ
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -102,6 +101,7 @@ DATABASES = {
         'ATOMIC_REQUESTS': True,
     }
 }
+
 '''
 if DEBUG:
 else:
@@ -155,7 +155,6 @@ STATICFILES_FINDERS = [
 ]
 
 # ManifestStaticFilesStorage is recommended in production, to prevent outdated
-# Javascript / CSS assets being served from cache (e.g. after a Wagtail upgrade).
 # See https://docs.djangoproject.com/en/2.2/ref/contrib/staticfiles/#manifeststaticfilesstorage
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
@@ -164,27 +163,11 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-if DEBUG:
-    INTERNAL_IPS = [
-        "127.0.0.1",
-    ]
-    ALLOWED_HOSTS = [
-        "*",
-        #"localhost",
-    ]
-else:
-    ALLOWED_HOSTS = [
-        'localhost',
-        'recursivegarden.com',
-    ]
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
 DJANGO_ADMIN_URL = env('DJANGO_ADMIN_URL', default='admin').strip('/')
-
-if DEBUG:
-    BASE_URL = 'http://localhost:8000'
-else:
-    BASE_URL = 'https://recursivegarden.com'
-
 
 # Email
 if DEBUG:
@@ -199,3 +182,13 @@ REST_FRAMEWORK = {
 }
 
 TAILWIND_APP_NAME = 'theme'
+
+
+ALLOWED_HOSTS = [
+    "localhost",
+    'recursivegarden.com',
+    'socialmemorycomplex.io',
+    'labyrinth.love',
+    'hanjononduality.com',
+]
+
