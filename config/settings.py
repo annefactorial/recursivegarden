@@ -172,6 +172,16 @@ DJANGO_ADMIN_URL = env('DJANGO_ADMIN_URL', default='admin').strip('/')
 # Email
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    POSTMARK_API_KEY= env('POSTMARK_API_KEY')
+
+    EMAIL_HOST = 'smtp.postmarkapp.com'
+    EMAIL_PORT = 587
+    EMAIL_HOST_USER = POSTMARK_API_KEY
+    EMAIL_HOST_PASSWORD = POSTMARK_API_KEY
+    EMAIL_USE_TLS = True
+
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
