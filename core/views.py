@@ -48,11 +48,13 @@ class DonationPageView(generic.TemplateView):
 class DomainView(generic.TemplateView):
     def get_template_names(self):
         http_host = self.request.META.get('HTTP_HOST')
+        root_host = settings.ROOT_HOST
 
-        if http_host.startswith('localhost'):
-            domain_name = 'localhost'
-        elif 'localhost' in http_host:
-            domain_name = http_host.split('.localhost')[0]
+        #TODO use ALLOWED_HOSTS as a whitelist
+        if http_host.startswith(root_host):
+            domain_name = root_host
+        elif root_host in http_host:
+            domain_name = http_host.split(f'.{root_host}')[0]
         else:
             domain_name = http_host
 
