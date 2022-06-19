@@ -28,4 +28,5 @@ fi
 source env/bin/activate
 pip install -r requirements/production.txt
 echo 'Restarting systemd service'
+yes yes | /home/recursivegarden/recursivegarden/env/bin/python manage.py collectstatic
 sudo systemctl restart recursivegarden
