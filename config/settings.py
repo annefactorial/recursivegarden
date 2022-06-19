@@ -26,10 +26,10 @@ THIRD_PARTY_APPS = [
     "django_htmx",
     "tailwind",
     "theme",
+    "django_browser_reload",
 ]
 
 DEBUG_APPS = [
-    "django_browser_reload",
     #"django_watchfiles",
     "django_extensions",
     "debug_toolbar",
