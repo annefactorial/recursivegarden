@@ -196,15 +196,15 @@ REST_FRAMEWORK = {
 TAILWIND_APP_NAME = 'theme'
 
 
-ALLOWED_HOSTS = [
-    "localhost",
-    ".localhost",
-    'recursivegarden.com',
-    '.recursivegarden.com',
-    'socialmemorycomplex.io',
-    'labyrinth.love',
-    'hanjononduality.com',
-]
+ALLOWED_HOSTS = ['*']
+#    "localhost",
+#    ".localhost",
+#    'recursivegarden.com',
+#    '.recursivegarden.com',
+#    'socialmemorycomplex.io',
+#    'labyrinth.love',
+#    'hanjononduality.com',
+#]
 ROOT_HOST = env('ROOT_HOST', default='localhost')
 
 TEST_RUNNER = "django_rich.test.RichRunner"
