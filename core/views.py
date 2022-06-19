@@ -85,3 +85,9 @@ class RoomView(generic.TemplateView):
             return [full_path]
 
 
+
+class HealthCheckView(generic.TemplateView):
+    '''
+    set up a healthcheck view that inspects the running app and returns a report,
+    ping it regularly with some kind of uptime monitor, have a dashboard page somewhere
+    '''
