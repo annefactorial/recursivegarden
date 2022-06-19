@@ -24,14 +24,13 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'widget_tweaks',
     "django_htmx",
-    "django_browser_reload",
     "tailwind",
     "theme",
-    #"django_watchfiles",
-
 ]
 
 DEBUG_APPS = [
+    "django_browser_reload",
+    #"django_watchfiles",
     "django_extensions",
     "debug_toolbar",
 ]
@@ -207,3 +206,5 @@ ALLOWED_HOSTS = [
     'hanjononduality.com',
 ]
 ROOT_HOST = env('ROOT_HOST', default='localhost')
+
+TEST_RUNNER = "django_rich.test.RichRunner"
