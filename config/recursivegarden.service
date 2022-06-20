@@ -1,0 +1,12 @@
+[Unit]
+Description=Recursive Garden Server
+After=network.target
+
+[Service]
+User=recursivegarden
+Group=recursivegarden
+WorkingDirectory=/home/recursivegarden/recursivegarden
+ExecStart=/home/recursivegarden/recursivegarden/env/bin/gunicorn --access-logfile "/home/recursivegarden/logs/gunicorn.access.log" --error-logfile "/home/recursivegarden/logs/gunicorn.error.log" --workers 2 --bind 127.0.0.1:22222 config.wsgi:application
+
+[Install]
+WantedBy=multi-user.target

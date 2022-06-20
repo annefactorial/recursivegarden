@@ -207,3 +207,4 @@ ALLOWED_HOSTS = ['*']
 ROOT_HOST = env('ROOT_HOST', default='localhost')
 
 TEST_RUNNER = "django_rich.test.RichRunner"
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
