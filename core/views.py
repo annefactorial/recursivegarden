@@ -68,6 +68,9 @@ class RoomView(generic.TemplateView):
         # Strip port
         http_host = http_host.split(':')[0]
 
+        print(http_host)
+        print(root_host)
+
         # Allow subdomains of non-root domains to point to that domain, for testing
         # socialmemorycomplex.io.localhost -> socialmemorycomplex.io
         # socialmemorycomplex.io.recursivegarden.com -> socialmemorycomplex.io

@@ -14,8 +14,7 @@ router.register('events', views.EventViewSet)
 
 
 urlpatterns = [
-    path('discord/', TemplateView.as_view(template_name='core/discord.html')),
     #path('api/', include(router.urls)),
-    path('<path:path>', views.RoomView.as_view(), name='room_view'),
     path('', views.RoomView.as_view(), name='room_view'),
+    path('<path:path>', views.RoomView.as_view(), name='room_view'),
 ]

@@ -1,4 +1,4 @@
-{% load django_htmx django_browser_reload static tailwind_tags %}
+{% load django_htmx static tailwind_tags %}
 <!doctype html>
 <html lang="en">
     <head>
@@ -31,8 +31,6 @@
         {% endif %}
 
         {% block content %}{% endblock %}
-
-        {% django_browser_reload_script %}
     </body>
 </html>
 

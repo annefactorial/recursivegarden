@@ -26,7 +26,7 @@ THIRD_PARTY_APPS = [
     "django_htmx",
     "tailwind",
     "theme",
-    "django_browser_reload",
+    #"django_browser_reload",
 ]
 
 DEBUG_APPS = [
@@ -48,7 +48,7 @@ MIDDLEWARE = []
 
 if DEBUG:
     MIDDLEWARE += [
-        "django_browser_reload.middleware.BrowserReloadMiddleware",
+        #"django_browser_reload.middleware.BrowserReloadMiddleware",
         "debug_toolbar.middleware.DebugToolbarMiddleware",
     ]
 
@@ -77,6 +77,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
+            BASE_DIR / 'domains',
             BASE_DIR / 'templates',
         ],
         'APP_DIRS': True,
@@ -135,6 +136,7 @@ AUTH_PASSWORD_VALIDATORS = [
     { 'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator' },
     { 'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator' },
 ]
+AUTH_USER_MODEL = 'core.User'
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
@@ -194,16 +196,14 @@ REST_FRAMEWORK = {
 
 TAILWIND_APP_NAME = 'theme'
 
-
-ALLOWED_HOSTS = ['*']
-#    "localhost",
-#    ".localhost",
-#    'recursivegarden.com',
-#    '.recursivegarden.com',
-#    'socialmemorycomplex.io',
-#    'labyrinth.love',
-#    'hanjononduality.com',
-#]
+ENABLED_DOMAINS = [
+    domain_name.strip()
+    for domain_name in env.list('ENABLED_DOMAINS', default='localhost')
+]
+ALLOWED_HOSTS = [
+    '.' + domain_name.strip()
+    for domain_name in ENABLED_DOMAINS
+]
 ROOT_HOST = env('ROOT_HOST', default='localhost')
 
 TEST_RUNNER = "django_rich.test.RichRunner"
