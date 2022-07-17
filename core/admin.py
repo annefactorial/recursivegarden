@@ -1,8 +1,8 @@
 from django.contrib import admin
-from core.models import Card
+from core.models import User, Card, HTMLContent, GoogleDoc, MP4ImageViewer
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-
+from django.contrib.contenttypes.admin import GenericTabularInline
 from .models import User
 
 
@@ -44,26 +44,37 @@ class CustomUserAdmin(UserAdmin):
 
 class CardAdmin(admin.ModelAdmin):
     list_display = [
-        "uuid",
-        "created_at",
-        "completed_at",
-
-        "title",
-        "text",
-
-        "file",
-        
-        "votes",
-        "src",
-        "data",
-
-        "author",
-        "parent",
-        "root",
-        "next",
+        'created_at',
+        'updated_at',
+        'parent',
+        'uuid',
+        'site',
+        'url',
+        'title',
+        'description',
+        'published',
+        'content_type',
+        'object_id',
+        'content_object',
     ]
+
     ordering = ["-created_at"]
+
+
+class HTMLContentAdmin(admin.ModelAdmin):
+    pass
+
+
+class GoogleDocAdmin(admin.ModelAdmin):
+    pass
+
+
+class MP4ImageViewerAdmin(admin.ModelAdmin):
+    pass
 
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Card, CardAdmin)
+admin.site.register(HTMLContent, HTMLContentAdmin)
+admin.site.register(GoogleDoc, GoogleDocAdmin)
+admin.site.register(MP4ImageViewer, MP4ImageViewerAdmin)

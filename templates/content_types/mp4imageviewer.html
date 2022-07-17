@@ -1,0 +1,24 @@
+<div
+    class="flex flex-col min-h-screen min-w-full"
+    x-data="{ width: window.innerWidth }"
+    @resize.window="width = window.innerWidth"
+>
+    <template x-if="width <= 2222">
+        <video
+            src="{{ card.content_object.small.url }}"
+            autoplay loop muted
+        ></video>
+    </template>
+    <template x-if="width > 2222 && width <= 4444 ">
+        <video
+            src="{{ card.content_object.medium.url }}"
+            autoplay loop muted
+        ></video>
+    </template>
+    <template x-if="width > 4444">
+        <video
+            src="{{ card.content_object.full.url }}"
+            autoplay loop muted
+        ></video>
+    </template>
+</div>

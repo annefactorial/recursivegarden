@@ -15,6 +15,7 @@ router.register('events', views.EventViewSet)
 
 urlpatterns = [
     #path('api/', include(router.urls)),
-    path('', views.RoomView.as_view(), name='room_view'),
-    path('<path:path>', views.RoomView.as_view(), name='room_view'),
+    path('', views.card_by_url, name='card_by_url'),
+    path('<uuid:uuid>/', views.card_by_uuid, name='card_by_uuid'),
+    path('<url>/', views.card_by_url, name='card_by_url'),
 ]

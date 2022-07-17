@@ -11,6 +11,7 @@ DEBUG = env.bool('DEBUG', default=False)
 SECRET_KEY = env('SECRET_KEY')
 
 DJANGO_APPS = [
+    'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -48,13 +49,14 @@ MIDDLEWARE = []
 
 if DEBUG:
     MIDDLEWARE += [
-        #"django_browser_reload.middleware.BrowserReloadMiddleware",
+        'core.middleware.SubdomainLocalhostSiteMiddleware',
         "debug_toolbar.middleware.DebugToolbarMiddleware",
     ]
 
 MIDDLEWARE += [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.sites.middleware.CurrentSiteMiddleware',
     "django_htmx.middleware.HtmxMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -169,9 +171,9 @@ DJANGO_ADMIN_URL = env('DJANGO_ADMIN_URL', default='admin').strip('/')
 
 # Email
 ADMINS = [
-    ('David Factorial', 'david@recursivegarden.com'),
+    ('Anne Factorial', 'anne@recursivegarden.com'),
 ]
-SERVER_EMAIL = 'david@recursivegarden.com'
+SERVER_EMAIL = 'anne@recursivegarden.com'
 
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

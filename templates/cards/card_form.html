@@ -1,0 +1,32 @@
+{% for hidden_field in form.hidden_fields %}
+    {{ hidden_field }}
+{% endfor %}
+
+{% if form.non_field_errors %}
+<div class="bg-red-500 text-red-900">
+    {% for error in form.non_field_errors %}
+        {{ error }}
+    {% endfor %}
+</div>
+{% endif %}
+
+{% for field in form.visible_fields %}
+<div class="border bg-white p-2 mb-4">
+    <label class="block w-full" for="{{ field.auto_id }}">
+        {{ field.label }}
+    </label>
+
+    {{ field }}
+    {% if field.errors %}
+        {% for error in field.errors %}
+            <div class="invalid-feedback">
+                {{ error }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if field.help_text %}
+    <small class="form-text text-muted">{{ field.help_text }}</small>
+    {% endif %}
+</div>
+{% endfor %}

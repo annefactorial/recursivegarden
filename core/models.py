@@ -1,4 +1,7 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.sites.models import Site
 from django.utils import timezone
 from uuid import uuid4
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, UserManager
@@ -71,36 +74,120 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.name or self.email.split("@")[0]
 
 
-class Focus(models.Model):
-    card = models.ForeignKey('Card', on_delete=models.PROTECT)
-    start = models.DateTimeField(default=timezone.now)
-    duration = models.DurationField(null=True, blank=True)
-
-
 class Card(models.Model):
-    # ID
-    uuid = models.UUIDField(default=uuid4, editable=False)
-
-    # TIMESTAMPS
     created_at = models.DateTimeField(default=timezone.now)
-    completed_at = models.DateTimeField(blank=True)
+    updated_at = models.DateTimeField(default=timezone.now)
 
-    # BODY DATA
-    title = models.CharField(max_length=1023, blank=True)
-    text = models.TextField(max_length=65535, blank=True)
+    parent = models.ForeignKey(
+        'self',
+        related_name="children",
+        null=True, blank=True,
+        on_delete=models.SET_NULL)
 
-    # FILE DATA
-    file = models.FileField(
-        max_length=255,
+    uuid = models.UUIDField(
+        unique=True,
+        default=uuid4,
+        editable=False,
+        help_text='A universally unique identifier, allows referencing a card if no url is provided.')
+
+    site = models.ForeignKey(
+        Site,
+        on_delete=models.SET_NULL,
+        null=True,
         blank=True,
-        upload_to="files/")
+        help_text='The domain name which this card will be viewable on.')
 
-    # META DATA
-    type = models.CharField(max_length=1023, blank=True)
-    votes = models.IntegerField(default=1)
-    data = models.JSONField(null=True, blank=True)
+    url = models.CharField(
+        max_length=1023,
+        blank=True,
+        help_text='If specified, allow viewing this card at this url for the above specified site. A url is a series of only lowercase letters, numbers, and slashes and ends with a slash.')
 
+    title = models.CharField(
+        max_length=1023,
+        blank=True,
+        help_text='A title for this card. If this card is used as the root card of a webpage, it will be used as the html page title.')
+    description = models.TextField(
+        max_length=8191,
+        blank=True,
+        help_text='A description of this card. If this card is used as the root card of a webpage, it will be used as the meta description text.')
+
+    published = models.BooleanField(
+        default=False,
+        help_text='If true, this card will be publically viewable without required the viewer to be logged in. If false (default) this card will only be viewable by logged in users.')
+
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+
+    @property
+    def content_type_template(self):
+        return f"content_types/{self.content_type.model}.html"
+
+    def __str__(self):
+        return self.title or self.uuid
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["content_type", "object_id"]),
+        ]
+
+
+class CardData(models.Model):
+    '''
+    Inherit from CardData to create a new content type of card with additional fields.
+    '''
+
+    cards = GenericRelation(Card)
+
+    class Meta:
+        abstract = True
+
+    @property
+    def card(self):
+       return self.cards.first()
+
+
+class HTMLContent(CardData):
+    html_content = models.TextField()
+
+    def __str__(self):
+        return self.html_content[:255]
+
+
+class MP4ImageViewer(CardData):
+    small = models.FileField()
+    medium = models.FileField()
+    full = models.FileField()
+
+
+class GoogleDoc(CardData):
+    google_doc_title = models.CharField(max_length=1023)
+    google_doc_url = models.CharField(max_length=1023)
+
+    def __str__(self):
+        return self.google_doc_title
+
+
+'''
+class MarkdownContent(CardData):
+    markdown_content = models.TextField()
+
+    def __str__(self):
+        return self.markdown_content[:255]
+
+
+class CardStream(CardData):
+    many to many to card
+    like wagtail's StreamField
+
+'''
+    
+
+"""
     # RELATIONSHIP DATA
+
+    # The remote data for this card
+    text = models.TextField(max_length=65535, blank=True)
     src = models.URLField(max_length=1023, blank=True)
 
     author = models.ForeignKey(
@@ -108,13 +195,9 @@ class Card(models.Model):
         related_name="cards",
         on_delete=models.PROTECT)
 
-    parent = models.ForeignKey(
-        'self',
-        related_name="children",
-        null=True, blank=True,
-        on_delete=models.SET_NULL,
-        help_text="If null, this is a top level card.")
+    # ORDERING DATA
 
+    votes = models.IntegerField(default=1)
     root = models.ForeignKey(
         'self',
         related_name="descendants",
@@ -130,10 +213,55 @@ class Card(models.Model):
         help_text="The next card in this thread.")
 
     def __str__(self):
-        return self.title or str(self.text[255:])
+        return self.title or self.text[40:] or self.uuid
 
     def get_absolute_url(self):
-        return reverse('card_detail', kwargs={'pk': self.pk})
+        return reverse('card_detail', kwargs={'uuid': self.uuid})
 
     class Meta:
         ordering = ['-created_at']
+
+        '''
+        constraints = [
+            models.CheckConstraint(
+                name="%(app_label)s_%(class)s_prev_or_parent_not_both",
+                check=(
+                    models.Q(
+                        prev__isnull=False,
+                        parent__isnull=True,
+                    ) | models.Q(
+                        prev__isnull=True,
+                        parent__isnull=False,
+                    ) | models.Q(
+                        prev__isnull=True,
+                        parent__isnull=True,
+                    )
+                ))
+        ]
+        '''
+
+    '''
+    @property
+    def root(self):
+        return self.thread[0]
+
+    @property
+    def thread(self):
+        return self.parent.children.order_by('order')
+    '''
+
+
+class FocusPeriod(CardData):
+    card = models.ForeignKey('Card', on_delete=models.PROTECT)
+    start = models.DateTimeField(default=timezone.now)
+    duration = models.DurationField(null=True, blank=True)
+
+
+
+class Compositor(CardType):
+    '''
+    Combines multiple cards onto a single page
+    '''
+
+
+"""
