@@ -66,7 +66,10 @@ class HTMLContentAdmin(admin.ModelAdmin):
 
 
 class GoogleDocAdmin(admin.ModelAdmin):
-    pass
+    list_display = [
+        'google_doc_title',
+        'google_doc_url',
+    ]
 
 
 class MP4ImageViewerAdmin(admin.ModelAdmin):

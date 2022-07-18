@@ -15,5 +15,10 @@ class SubdomainLocalhostSiteMiddleware(MiddlewareMixin):
     def process_request(self, request):
         if settings.DEBUG:
             domain = request.get_host()
-            if domain != 'localhost' and domain.endswith('localhost'):
-                host = request.META["HTTP_HOST"] = '.'.join(domain.split('.')[:-1])
+            if domain.startswith('localhost'):
+                return
+            domain = domain.split('localhost')[0]
+            if domain.endswith('.'):
+                domain = domain.rstrip('.')
+
+            request.META["HTTP_HOST"] = domain
