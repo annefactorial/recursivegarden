@@ -168,6 +168,16 @@ class GoogleDoc(CardData):
         return self.google_doc_title
 
 
+class SiteSettings(CardData):
+    site = models.OneToOneField(
+        Site,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True)
+
+    background_color = models.CharField(max_length=255)
+
+
 '''
 class MarkdownContent(CardData):
     markdown_content = models.TextField()
