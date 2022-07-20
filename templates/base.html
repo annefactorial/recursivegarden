@@ -16,16 +16,20 @@
 
         html, body {
             width: 100%;
-            height: 100vh;
         }
         </style>
 
         <script src="{% static 'htmx.min.js' %}" defer></script>
         <script src="{% static 'alpine.min.js' %}" defer></script>
         {% django_htmx_script %}
+
+        {% with favicon_img=request.site.sitesettings.favicon_32x32 %}
+            {% if favicon_img %}
+                <link rel="icon" href="{{ favicon_img.url }}">
+            {% endif %}
+        {% endwith %}
     </head>
     <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-
         {% if messages %}
         <ul class="messages">
             {% for message in messages %}

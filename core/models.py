@@ -188,6 +188,7 @@ class SiteSettings(CardData):
         blank=True)
 
     background_color = models.CharField(max_length=255)
+    favicon_32x32 = models.ImageField(blank=True)
 
     def __str__(self):
         return self.site.name
