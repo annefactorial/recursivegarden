@@ -1,5 +1,5 @@
 from django.contrib import admin
-from core.models import User, Card, HTMLContent, GoogleDoc, MP4ImageViewer, SiteSettings
+from core.models import User, Card, HTMLContent, GoogleDoc, MP4ImageViewer, PNGImageViewer, SiteSettings
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.contenttypes.admin import GenericTabularInline
@@ -76,6 +76,10 @@ class MP4ImageViewerAdmin(admin.ModelAdmin):
     pass
 
 
+class PNGImageViewerAdmin(admin.ModelAdmin):
+    pass
+
+
 class SiteSettingsAdmin(admin.ModelAdmin):
     pass
 
@@ -85,4 +89,5 @@ admin.site.register(Card, CardAdmin)
 admin.site.register(HTMLContent, HTMLContentAdmin)
 admin.site.register(GoogleDoc, GoogleDocAdmin)
 admin.site.register(MP4ImageViewer, MP4ImageViewerAdmin)
+admin.site.register(PNGImageViewer, PNGImageViewerAdmin)
 admin.site.register(SiteSettings, SiteSettingsAdmin)

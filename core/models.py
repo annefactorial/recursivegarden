@@ -155,9 +155,21 @@ class HTMLContent(CardData):
 
 
 class MP4ImageViewer(CardData):
+    title = models.CharField(max_length=255)
     small = models.FileField()
     medium = models.FileField()
     full = models.FileField()
+
+    def __str__(self):
+        return self.title
+
+
+class PNGImageViewer(CardData):
+    title = models.CharField(max_length=255)
+    full = models.FileField()
+
+    def __str__(self):
+        return self.title
 
 
 class GoogleDoc(CardData):
@@ -176,6 +188,9 @@ class SiteSettings(CardData):
         blank=True)
 
     background_color = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.site.name
 
 
 '''
