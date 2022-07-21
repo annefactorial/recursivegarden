@@ -14,6 +14,7 @@ class CustomUserAdmin(UserAdmin):
                     "name",
                     "email",
                     "password"
+                    "profile_picture"
                 )
             }
         ),
