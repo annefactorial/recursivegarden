@@ -13,8 +13,8 @@ class CustomUserAdmin(UserAdmin):
                 "fields": (
                     "name",
                     "email",
-                    "password"
-                    "profile_picture"
+                    "password",
+                    "profile_picture",
                 )
             }
         ),
@@ -33,7 +33,7 @@ class CustomUserAdmin(UserAdmin):
             "Important dates", {
                 "fields": (
                     "last_login",
-                    "date_joined"
+                    "date_joined",
                 )
             }
         ),
