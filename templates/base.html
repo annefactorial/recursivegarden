@@ -39,5 +39,14 @@
         {% endif %}
 
         {% block content %}{% endblock %}
+
+        {% if request.user.is_authenticated %}
+            <div class="absolute w-64 h-64 right-0 bottom-0">
+                <p>Logged in as: {{ request.user.name }}</p>
+                {% if request.user.profile_picture %}
+                    <img src="{{ request.user.profile_picture.url }}">
+                {% endif %}
+            </div>
+        {% endif %}
     </body>
 </html>
